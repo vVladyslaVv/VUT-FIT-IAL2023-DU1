@@ -233,7 +233,7 @@ char *infix2postfix( const char *infixExpression ) {
  */
 void expr_value_push( Stack *stack, int value ) {
 	// Split the integer into four bytes
-    // Start with the least significant byte
+    // Start with the LSB
     for (int i = 0; i <= 3; i++) {
         char byte = (value >> (i * 8)) & 0xFF;  // Shift and mask to get the i-th byte
         Stack_Push(stack, byte);  // Push the byte onto the stack
@@ -254,7 +254,7 @@ void expr_value_push( Stack *stack, int value ) {
  */
 void expr_value_pop( Stack *stack, int *value ) {
 	*value = 0;  // Reset the value to ensure no garbage data
-    // Start with the most significant byte (as the order is now reversed due to the stack logic)
+    // Start with the most significant byte (the order is now reversed due to the stack logic)
     for (int i = 3; i >= 0; i--) {
         char byte;
         Stack_Top(stack, &byte);  // Get the top byte from the stack
@@ -332,12 +332,16 @@ bool eval( const char *infixExpression, VariableValue variableValues[], int vari
                 case '/': 
                     // Check for division by zero
                     if (op2 == 0) {
+                        Stack_Dispose(&valueStack);
+
                         free(postfixExpression);
                         return false;  // Division by zero is not allowed, return false
                     }
                     result = op1 / op2; 
                     break;
                 default: 
+                    Stack_Dispose(&valueStack);
+
                     free(postfixExpression);
                     return false;  // Encountered an invalid operator, return false
             }
@@ -348,6 +352,10 @@ bool eval( const char *infixExpression, VariableValue variableValues[], int vari
 
     // The final result of the expression evaluation is now on top of the stack
     expr_value_pop(&valueStack, value);
+
+    // Free up stack
+    Stack_Dispose(&valueStack);
+
     // Free the memory allocated for the postfix expression
     free(postfixExpression);
     // Return true to indicate successful evaluation

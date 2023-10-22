@@ -77,7 +77,7 @@ void Stack_Init( Stack *stack ) {
         Stack_Error(SERR_INIT);
         return;
     }
-	// Set the top index to -1 indicating an empty stack
+	// Set the top index to -1 -> means empty stack
     stack->topIndex = -1;
 	// Allocate memory for the stack array
     stack->array = (char *)malloc(STACK_SIZE * sizeof(char));
@@ -93,7 +93,7 @@ void Stack_Init( Stack *stack ) {
  * @returns true v případě, že je zásobník prázdný, jinak false
  */
 bool Stack_IsEmpty( const Stack *stack ) {
-	// Compare two statements and return true if the top index is is -1, indicating an empty stack
+	// Compare two statements and return true if the top index is is -1, which would mean empty stack
 	return stack->topIndex == -1;
 }
 
@@ -110,7 +110,7 @@ bool Stack_IsEmpty( const Stack *stack ) {
  * @returns true v případě, že je zásobník plný, jinak false
  */
 bool Stack_IsFull( const Stack *stack ) {
-	// Compare two statements and return true if the top index is at the maximum allowed index
+	// Compare two statements and return true if the top index is at the maximum allowed index (size - 1)
 	return stack->topIndex == STACK_SIZE - 1;
 }
 

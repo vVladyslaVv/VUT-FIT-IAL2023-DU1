@@ -53,3 +53,5 @@ clean:
 purge: clean
 	@rm -Rf $(PROJECT)-output
 	@rm -f *.out *.txt *.html
+valgrind: $(PROG)
+	valgrind --leak-check=full --show-leak-kinds=all ./$(PROG)
